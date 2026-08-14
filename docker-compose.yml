@@ -39,7 +39,7 @@ services:
       SEED_DEMO_PASSWORD: ${SEED_DEMO_PASSWORD}
       SEED_DEMO_DATA: ${SEED_DEMO_DATA}
     ports:
-      - "${API_PORT}:3000"
+      - "127.0.0.1:${API_PORT}:3000"
     depends_on:
       mariadb:
         condition: service_healthy
@@ -58,7 +58,7 @@ services:
       NODE_ENV: production
       PORT: 3001
     ports:
-      - "${WEB_PORT}:3001"
+      - "127.0.0.1:${API_PORT}:3001"
     depends_on:
       - api
     networks:
