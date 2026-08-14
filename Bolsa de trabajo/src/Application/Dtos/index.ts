@@ -21,3 +21,4 @@ export type UpdateResolucionDto = z.infer<typeof schemas.updateResolucionSchema>
 export type NotificarEntrevistaDto = z.infer<typeof schemas.notificarEntrevistaSchema>;
 export type UpdateUsuarioStatusDto = z.infer<typeof schemas.updateUsuarioStatusSchema>;
 export type AssignRolDto = z.infer<typeof schemas.assignRolSchema>;
+export type CreatePersonalDto = z.infer<typeof schemas.createPersonalSchema>;

@@ -1,5 +1,5 @@
-export type RoleName = 'Aspirante' | 'Empresa' | 'Vinculacion';
-export type RoleSlug = 'aspirante' | 'empresa' | 'vinculacion';
+export type RoleName = 'Aspirante' | 'Empresa' | 'Vinculacion' | 'Control Escolar';
+export type RoleSlug = 'aspirante' | 'empresa' | 'vinculacion' | 'control-escolar';
 export type VacancyStatus = 'Abierta' | 'En proceso' | 'Cerrada';
 export type AgreementStatus = 'Pendiente' | 'Vigente';
 

@@ -5,7 +5,7 @@ import { RoleName } from '../../Domain/Enums/Roles';
 
 const router = Router();
 
-router.use(authenticateJWT, authorizeRoles(RoleName.VINCULACION));
+router.use(authenticateJWT, authorizeRoles(RoleName.VINCULACION, RoleName.CONTROL_ESCOLAR));
 
 router.get('/resumen', ReporteController.getResumen);
 router.get('/vacantes-por-carrera', ReporteController.getVacantesPorCarrera);

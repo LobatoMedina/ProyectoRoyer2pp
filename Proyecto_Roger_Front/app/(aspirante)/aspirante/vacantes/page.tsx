@@ -43,7 +43,7 @@ export default function AspiranteVacantesPage() {
         description="Filtra las oportunidades por carrera, tipo o palabra clave"
       />
 
-      <div className="grid gap-3 rounded-lg border border-gray-200 bg-white p-4 sm:grid-cols-4">
+      <div className="grid gap-3 rounded-lg border border-gray-200 bg-white p-4 sm:grid-cols-2 lg:grid-cols-4">
         <input
           type="search"
           placeholder="Buscar por puesto"
@@ -102,11 +102,11 @@ export default function AspiranteVacantesPage() {
             {vacantes.data?.map((vacante) => (
               <div
                 key={vacante.VacanteId}
-                className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white p-5 shadow-sm"
+                className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:p-5"
               >
-                <div>
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-lg font-bold text-gray-900">{vacante.Vacante_Vacante}</h3>
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                    <h3 className="break-words text-lg font-bold text-gray-900">{vacante.Vacante_Vacante}</h3>
                     <StatusBadge status={vacante.estado} />
                   </div>
                   <p className="text-sm text-gray-500">
@@ -121,7 +121,7 @@ export default function AspiranteVacantesPage() {
                 </div>
                 <Link
                   href={`/aspirante/vacantes/${vacante.VacanteId}`}
-                  className="rounded bg-blue-600 px-4 py-2 text-sm text-white transition hover:bg-blue-700"
+                  className="shrink-0 rounded bg-blue-600 px-4 py-2 text-center text-sm text-white transition hover:bg-blue-700"
                 >
                   Ver detalles
                 </Link>

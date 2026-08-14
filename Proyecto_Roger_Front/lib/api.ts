@@ -194,8 +194,22 @@ export const reporteApi = {
   vacantesMasDemandadas: () => get<VacanteDemandada[]>('/reportes/vacantes-mas-demandadas'),
 };
 
+export interface CreatePersonalPayload {
+  usuario: string;
+  contrasena: string;
+  nombre: string;
+  apellidoPaterno: string;
+  apellidoMaterno?: string;
+  curp: string;
+  sexoId: number;
+  edad: number;
+  rolId: number;
+}
+
 export const usuarioApi = {
   list: () => get<Usuario[]>('/usuarios'),
+  createPersonal: (payload: CreatePersonalPayload) =>
+    post<Usuario>('/usuarios/personal', payload),
   updateStatus: (usuarioId: number, activo: boolean) =>
     patch<Usuario>(`/usuarios/${usuarioId}/status`, { activo }),
   assignRol: (usuarioId: number, rolId: number) =>

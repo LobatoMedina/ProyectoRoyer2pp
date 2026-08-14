@@ -40,7 +40,7 @@ export default function CatalogosPage() {
 
       <div className="grid gap-4 md:grid-cols-2">
         {catalogos.data?.map((catalogo) => (
-          <div key={catalogo.title} className="rounded-lg border border-gray-200 bg-white p-6">
+          <div key={catalogo.title} className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6">
             <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500">
               {catalogo.title}
             </h2>

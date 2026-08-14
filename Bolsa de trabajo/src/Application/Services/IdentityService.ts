@@ -77,6 +77,7 @@ export class IdentityService {
 
   static async assertAspiranteAccess(user: TokenPayload, aspiranteId: number): Promise<void> {
     if (this.hasRole(user, RoleName.VINCULACION)) return;
+    if (this.hasRole(user, RoleName.CONTROL_ESCOLAR)) return;
 
     const ownAspiranteId = await this.getAspiranteIdByUserId(user.userId);
     if (ownAspiranteId !== aspiranteId) {

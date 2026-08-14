@@ -106,7 +106,7 @@ export default function PerfilAspirantePage() {
       {message ? <SuccessMessage message={message} /> : null}
       {error ? <ErrorMessage message={error} /> : null}
 
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
+      <div className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500">
           Datos personales
         </h2>
@@ -130,7 +130,7 @@ export default function PerfilAspirantePage() {
         </div>
       </div>
 
-      <form onSubmit={handleSave} className="rounded-lg border border-gray-200 bg-white p-6">
+      <form onSubmit={handleSave} className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500">
           Datos académicos
         </h2>
@@ -177,13 +177,13 @@ export default function PerfilAspirantePage() {
         </div>
         <button
           type="submit"
-          className="mt-4 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
+          className="mt-4 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700 w-full sm:w-auto"
         >
           Guardar cambios
         </button>
       </form>
 
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
+      <div className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500">
           Medios de contacto
         </h2>
@@ -213,7 +213,7 @@ export default function PerfilAspirantePage() {
           </ul>
         )}
 
-        <form onSubmit={handleAddContacto} className="mt-4 grid gap-3 sm:grid-cols-3">
+        <form onSubmit={handleAddContacto} className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <select
             required
             value={tipoContactoId}
@@ -237,7 +237,7 @@ export default function PerfilAspirantePage() {
           />
           <button
             type="submit"
-            className="rounded-lg border border-blue-600 px-5 py-2.5 text-sm font-medium text-blue-600 transition hover:bg-blue-50"
+            className="mt-1 rounded-lg border border-blue-600 px-5 py-2.5 text-sm font-medium text-blue-600 transition hover:bg-blue-50"
           >
             Agregar
           </button>

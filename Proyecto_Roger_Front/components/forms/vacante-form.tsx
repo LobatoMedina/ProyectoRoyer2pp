@@ -94,7 +94,7 @@ export function VacanteForm({ initialValue, submitLabel, onSubmit }: VacanteForm
   const inputClass = 'mt-1 w-full rounded-lg border p-2.5 text-sm text-black';
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-gray-200 bg-white p-6">
+    <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 sm:p-6">
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="sm:col-span-2">
           <label className="block text-sm font-medium text-gray-700">Nombre del puesto</label>
@@ -209,7 +209,7 @@ export function VacanteForm({ initialValue, submitLabel, onSubmit }: VacanteForm
       <button
         type="submit"
         disabled={submitting}
-        className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700 disabled:bg-blue-300"
+        className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700 disabled:bg-blue-300 w-full sm:w-auto"
       >
         {submitting ? 'Guardando...' : submitLabel}
       </button>

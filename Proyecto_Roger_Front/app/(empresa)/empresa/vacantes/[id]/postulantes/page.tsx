@@ -14,6 +14,16 @@ import {
 } from '@/components/shared/feedback';
 import { StatusBadge } from '@/components/shared/status-badge';
 
+/**
+ * Valor mínimo para el input datetime-local: el momento actual en hora local.
+ * El backend vuelve a validarlo; esto solo evita el intento desde la interfaz.
+ */
+const ahoraLocal = () => {
+  const ahora = new Date();
+  ahora.setMinutes(ahora.getMinutes() - ahora.getTimezoneOffset());
+  return ahora.toISOString().slice(0, 16);
+};
+
 export default function PostulantesVacantePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const vacanteId = Number(id);
@@ -50,6 +60,12 @@ export default function PostulantesVacantePage({ params }: { params: Promise<{ i
   const handleInterview = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!interviewFor) return;
+
+    if (new Date(interviewDate).getTime() <= Date.now()) {
+      setMessage(null);
+      setError('No es posible agendar una entrevista en una fecha u hora que ya pasó.');
+      return;
+    }
 
     await runAction(
       () => postulacionApi.notificarEntrevista(interviewFor, interviewDate, interviewPlace),
@@ -89,10 +105,10 @@ export default function PostulantesVacantePage({ params }: { params: Promise<{ i
           {postulaciones.map((postulacion) => (
             <div
               key={postulacion.PostulacionId}
-              className="space-y-4 rounded-lg border border-gray-200 bg-white p-5 shadow-sm"
+              className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm sm:p-5"
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
+                <div className="min-w-0">
                   <p className="font-semibold text-gray-900">
                     {fullName(postulacion.aspirante.persona)}
                   </p>
@@ -108,7 +124,7 @@ export default function PostulantesVacantePage({ params }: { params: Promise<{ i
                 <StatusBadge status={postulacion.resolucion.Resolucion_Resolucion} />
               </div>
 
-              <div className="text-sm text-gray-600">
+              <div className="break-words text-sm text-gray-600">
                 <span className="font-medium text-gray-700">Contacto: </span>
                 {(postulacion.aspirante.persona.personaContactos ?? []).length === 0
                   ? 'El aspirante no registró medios de contacto.'
@@ -128,7 +144,7 @@ export default function PostulantesVacantePage({ params }: { params: Promise<{ i
                       'Estado del postulante actualizado.'
                     );
                   }}
-                  className="rounded-lg border bg-white p-2 text-sm text-black"
+                  className="w-full rounded-lg border bg-white p-2 text-sm text-black sm:w-auto"
                 >
                   <option value="">Cambiar estado...</option>
                   {resoluciones.map((item) => (
@@ -140,7 +156,7 @@ export default function PostulantesVacantePage({ params }: { params: Promise<{ i
 
                 <button
                   onClick={() => setInterviewFor(postulacion.PostulacionId)}
-                  className="rounded-lg border border-indigo-300 px-4 py-2 text-sm font-medium text-indigo-700 transition hover:bg-indigo-50"
+                  className="w-full rounded-lg border border-indigo-300 px-4 py-2 text-sm font-medium text-indigo-700 transition hover:bg-indigo-50 sm:w-auto"
                 >
                   Agendar entrevista
                 </button>
@@ -152,7 +168,7 @@ export default function PostulantesVacantePage({ params }: { params: Promise<{ i
                       'Aspirante marcado como contratado.'
                     )
                   }
-                  className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-700"
+                  className="w-full rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-700 sm:w-auto"
                 >
                   Contratar
                 </button>
@@ -161,25 +177,26 @@ export default function PostulantesVacantePage({ params }: { params: Promise<{ i
               {interviewFor === postulacion.PostulacionId ? (
                 <form
                   onSubmit={handleInterview}
-                  className="grid gap-3 rounded-lg bg-gray-50 p-4 sm:grid-cols-3"
+                  className="grid gap-3 rounded-lg bg-gray-50 p-4 sm:grid-cols-2 lg:grid-cols-3"
                 >
                   <input
                     type="datetime-local"
                     required
+                    min={ahoraLocal()}
                     value={interviewDate}
                     onChange={(event) => setInterviewDate(event.target.value)}
-                    className="rounded-lg border p-2 text-sm text-black"
+                    className="w-full rounded-lg border p-2 text-sm text-black"
                   />
                   <input
                     type="text"
                     placeholder="Lugar o enlace"
                     value={interviewPlace}
                     onChange={(event) => setInterviewPlace(event.target.value)}
-                    className="rounded-lg border p-2 text-sm text-black"
+                    className="w-full rounded-lg border p-2 text-sm text-black"
                   />
                   <button
                     type="submit"
-                    className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700"
+                    className="w-full rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700 sm:col-span-2 lg:col-span-1 lg:w-auto"
                   >
                     Notificar
                   </button>

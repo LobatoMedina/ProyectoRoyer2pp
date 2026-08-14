@@ -140,14 +140,44 @@ export const updateResolucionSchema = z.object({
   comentarios: z.string().trim().max(500).optional(),
 });
 
+/**
+ * Una entrevista solo puede agendarse en el futuro. Se acepta cualquier
+ * cadena que Date pueda interpretar (incluido el formato datetime-local
+ * que envía el navegador) y se rechaza todo lo que ya pasó.
+ */
 export const notificarEntrevistaSchema = z.object({
-  fechaHora: z.string().trim().min(1),
+  fechaHora: z
+    .string()
+    .trim()
+    .min(1, 'La fecha y hora de la entrevista es obligatoria.')
+    .refine((value) => !Number.isNaN(Date.parse(value)), {
+      message: 'La fecha y hora de la entrevista no tiene un formato válido.',
+    })
+    .refine((value) => Date.parse(value) > Date.now(), {
+      message: 'No es posible agendar una entrevista en una fecha u hora que ya pasó.',
+    }),
   lugar: z.string().trim().max(255).optional(),
   observaciones: z.string().trim().max(500).optional(),
 });
 
 export const updateUsuarioStatusSchema = z.object({
   activo: z.coerce.boolean(),
+});
+
+/**
+ * Alta de personal administrativo (Control Escolar o Vinculación).
+ * A diferencia del registro público, lo ejecuta Vinculación desde el panel.
+ */
+export const createPersonalSchema = z.object({
+  usuario: requiredText(100),
+  contrasena: z.string().min(6).max(255),
+  nombre: requiredText(100),
+  apellidoPaterno: requiredText(100),
+  apellidoMaterno: z.string().trim().max(100).optional(),
+  curp: z.string().trim().length(18),
+  sexoId: positiveId,
+  edad: z.coerce.number().int().min(18).max(99),
+  rolId: positiveId,
 });
 
 export const assignRolSchema = z.object({

@@ -4,6 +4,14 @@ import { AuthenticatedRequest } from '../Middlewares/AuthMiddleware';
 import { parseId } from '../Middlewares/ValidationMiddleware';
 
 export class UsuarioController {
+  static async createPersonal(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+    try {
+      res.status(201).json(await UsuarioService.createPersonal(req.body));
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async getAll(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     try {
       const activo =

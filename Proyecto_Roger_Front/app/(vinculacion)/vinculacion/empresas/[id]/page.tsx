@@ -41,14 +41,14 @@ export default function DetalleEmpresaPage({ params }: { params: Promise<{ id: s
         action={<StatusBadge status={empresa.estadoConvenio ?? 'Pendiente'} />}
       />
 
-      <div className="grid gap-4 rounded-lg border border-gray-200 bg-white p-6 sm:grid-cols-2">
+      <div className="grid gap-4 rounded-lg border border-gray-200 bg-white p-4 sm:grid-cols-2 sm:p-6">
         <Detail label="RFC" value={empresa.Empresa_rfc} />
         <Detail label="Tipo" value={empresa.tipoEmpresa?.TipoEmpresa_TipoEmpresa ?? '—'} />
         <Detail label="Dirección" value={empresa.Empresa_Direccion} />
         <Detail label="Usuario" value={empresa.usuario?.Usuario_Usuario ?? '—'} />
       </div>
 
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
+      <div className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500">Contactos</h2>
         {contactos.length === 0 ? (
           <div className="mt-3">
@@ -90,6 +90,6 @@ export default function DetalleEmpresaPage({ params }: { params: Promise<{ id: s
 const Detail = ({ label, value }: { label: string; value: string }) => (
   <div>
     <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">{label}</p>
-    <p className="mt-1 text-sm text-gray-800">{value}</p>
+    <p className="mt-1 break-words text-sm text-gray-800">{value}</p>
   </div>
 );
