@@ -22,6 +22,15 @@ services:
       - bolsa_trabajo
 
   api:
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=dokploy-network
+      - traefik.http.routers.bolsa-api.rule=Host(`bolsatrabajo.lobatolab.tech`) && PathPrefix(`/api`)
+      - traefik.http.routers.bolsa-api.entrypoints=websecure
+      - traefik.http.routers.bolsa-api.tls=true
+      - traefik.http.routers.bolsa-api.tls.certresolver=EL_QUE_COPIASTE
+      - traefik.http.routers.bolsa-api.priority=100
+      - traefik.http.services.bolsa-api.loadbalancer.server.port=3000
     build:
       context: "./Bolsa de trabajo"
       dockerfile: build.dockerfile
