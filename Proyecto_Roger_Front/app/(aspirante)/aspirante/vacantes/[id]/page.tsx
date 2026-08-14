@@ -60,7 +60,7 @@ export default function VacanteDetallePage({ params }: { params: Promise<{ id: s
       {message ? <SuccessMessage message={message} /> : null}
       {error ? <ErrorMessage message={error} /> : null}
 
-      <div className="grid gap-4 rounded-lg border border-gray-200 bg-white p-6 sm:grid-cols-2">
+      <div className="grid gap-4 rounded-lg border border-gray-200 bg-white p-4 sm:grid-cols-2 sm:p-6">
         <Detail label="Carrera solicitada" value={item.carreraTarget.Carrera_Carrera} />
         <Detail label="Tipo de vacante" value={item.tipoVacante.VacanteTipo_VacanteTipo} />
         <Detail label="Turno" value={item.turno.Turno_turno} />
@@ -71,7 +71,7 @@ export default function VacanteDetallePage({ params }: { params: Promise<{ id: s
         <Detail label="Postulaciones recibidas" value={String(item.totalPostulaciones)} />
       </div>
 
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
+      <div className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500">
           Requisitos y observaciones
         </h2>
@@ -83,7 +83,7 @@ export default function VacanteDetallePage({ params }: { params: Promise<{ id: s
       <button
         onClick={handleApply}
         disabled={submitting || item.estado === 'Cerrada'}
-        className="rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition hover:bg-blue-700 disabled:bg-gray-300"
+        className="w-full rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition hover:bg-blue-700 disabled:bg-gray-300 sm:w-auto"
       >
         {item.estado === 'Cerrada' ? 'Vacante cerrada' : submitting ? 'Enviando...' : 'Postularme'}
       </button>
@@ -94,6 +94,6 @@ export default function VacanteDetallePage({ params }: { params: Promise<{ id: s
 const Detail = ({ label, value }: { label: string; value: string }) => (
   <div>
     <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">{label}</p>
-    <p className="mt-1 text-sm text-gray-800">{value}</p>
+    <p className="mt-1 break-words text-sm text-gray-800">{value}</p>
   </div>
 );

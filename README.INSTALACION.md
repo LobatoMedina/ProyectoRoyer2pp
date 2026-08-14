@@ -77,6 +77,7 @@ con reiniciar el contenedor.
 | `admin` | Vinculación (administrador) | `Tijuana123?` |
 | `tech_corp` | Empresa (convenio vigente) | valor de `SEED_DEMO_PASSWORD` |
 | `juan_perez` | Aspirante | valor de `SEED_DEMO_PASSWORD` |
+| `control_escolar` | Control Escolar | valor de `SEED_DEMO_PASSWORD` |
 
 El usuario administrador es el único que el seed crea siempre, incluso con
 `SEED_DEMO_DATA=false`. Su nombre y contraseña salen de `SEED_ADMIN_USER` y
@@ -289,3 +290,62 @@ llama `Usuario_Contraseña`, con eñe y acento; se respetó tal cual, por lo que
 
 **Pendientes sugeridos.** Refresh tokens, paginación en los listados (hoy devuelven todo),
 carga de archivos para el CV y notificaciones por correo. Nada de eso bloquea la entrega.
+
+---
+
+## 9. Notas sobre cambios recientes
+
+### Diseño responsivo
+
+Los tres paneles (aspirante, empresa y vinculación) funcionan desde 320 px de ancho.
+
+- La estructura común vive en `components/shared/app-shell.tsx`. Los layouts de cada grupo de
+  rutas solo le pasan el título y los elementos de menú, así que siguen siendo componentes de
+  servidor.
+- El menú lateral es una columna fija a partir del breakpoint `lg` y un cajón deslizable por
+  debajo, con overlay, cierre con Escape y bloqueo del scroll de fondo.
+- `DataTable` muestra la tabla habitual desde `md` y convierte cada registro en una tarjeta
+  apilada en pantallas menores. Su interfaz no cambió, así que las páginas que lo usan no
+  requirieron modificaciones.
+- En `globals.css` se fuerza `font-size: 16px` en campos de formulario por debajo de 640 px:
+  iOS hace zoom automático al enfocar un campo con fuente menor y eso descuadra el layout.
+- Se retiró el bloque `@media (prefers-color-scheme: dark)`. La aplicación asume fondo claro en
+  todas sus pantallas y ese bloque dejaba texto gris sobre negro en dispositivos con modo
+  oscuro activado.
+
+### Validación de fechas de entrevista
+
+`notificarEntrevistaSchema` antes aceptaba cualquier texto no vacío. Ahora verifica que la cadena
+sea interpretable por `Date.parse` y que corresponda a un momento futuro. El formulario del
+front-end también aplica el atributo `min` en el campo `datetime-local`, pero la validación que
+cuenta es la del servidor.
+
+### Ciclos escolares
+
+El catálogo pasó de cuatrimestres (`2025-1`, `2025-2`, ...) a generaciones de cuatro años
+(`2023-2027`, `2024-2028`, ...), generadas por `buildCiclosEscolares()` en `prisma/seed.ts`.
+
+El rango va de `CICLO_PRIMER_ANIO` (2018) al año actual más uno, y todas las generaciones quedan
+activas. `CatalogosService.getCiclosEscolares()` filtra por `CicloEscolar_Activo`, y ese catálogo
+alimenta el registro de aspirantes: si solo se sembraran generaciones recientes, un egresado no
+podría seleccionar la suya. Ajusta `CICLO_PRIMER_ANIO` si necesitas otro punto de partida.
+
+### Personal de Control Escolar
+
+Se agregó el rol `Control Escolar` (id 4) y el endpoint `POST /api/usuarios/personal`, restringido
+a Vinculación, que crea la cuenta, el registro de persona y la asignación de rol en una sola
+transacción. El formulario correspondiente está en `/vinculacion/usuarios`. El endpoint solo acepta
+los roles `Control Escolar` y `Vinculacion`; cualquier otro devuelve 400.
+
+Control Escolar **comparte el panel de vinculación** con el menú filtrado, en lugar de tener una
+sección propia. Ve únicamente Reportes, Aspirantes y Catálogos. El filtrado del menú ocurre en
+`app/(vinculacion)/layout.tsx` leyendo la cookie de rol; el bloqueo real está en `middleware.ts`
+y en los `authorizeRoles` de las rutas del back-end.
+
+| Recurso | Vinculación | Control Escolar |
+|---|---|---|
+| Expedientes de aspirantes (lectura y edición) | Sí | Sí |
+| Reportes e indicadores | Sí | Sí |
+| Catálogos | Sí | Sí |
+| Empresas, convenios, vacantes, postulaciones | Sí | No |
+| Administración de usuarios | Sí | No |

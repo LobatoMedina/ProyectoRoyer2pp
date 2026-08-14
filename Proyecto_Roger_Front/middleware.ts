@@ -3,11 +3,24 @@ import type { NextRequest } from 'next/server';
 
 const publicRoutes = ['/', '/login', '/registro', '/unauthorized'];
 
-const roleByPrefix: Record<string, string> = {
-  '/aspirante': 'aspirante',
-  '/empresa': 'empresa',
-  '/vinculacion': 'vinculacion',
+/** Roles autorizados para cada sección del portal. */
+const rolesByPrefix: Record<string, string[]> = {
+  '/aspirante': ['aspirante'],
+  '/empresa': ['empresa'],
+  '/vinculacion': ['vinculacion', 'control-escolar'],
 };
+
+/**
+ * Secciones del panel de vinculación reservadas a la Coordinación.
+ * Control Escolar solo consulta expedientes y reportes.
+ */
+const vinculacionOnlyRoutes = [
+  '/vinculacion/usuarios',
+  '/vinculacion/convenios',
+  '/vinculacion/empresas',
+  '/vinculacion/vacantes',
+  '/vinculacion/postulaciones',
+];
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
@@ -23,12 +36,20 @@ export function middleware(request: NextRequest) {
   }
 
   if (pathname === '/login' || pathname.startsWith('/registro')) {
-    return NextResponse.redirect(new URL(`/${userRole ?? 'aspirante'}`, request.url));
+    const home = userRole === 'control-escolar' ? '/vinculacion/aspirantes' : `/${userRole ?? 'aspirante'}`;
+    return NextResponse.redirect(new URL(home, request.url));
   }
 
-  const matchedPrefix = Object.keys(roleByPrefix).find((prefix) => pathname.startsWith(prefix));
+  const matchedPrefix = Object.keys(rolesByPrefix).find((prefix) => pathname.startsWith(prefix));
 
-  if (matchedPrefix && roleByPrefix[matchedPrefix] !== userRole) {
+  if (matchedPrefix && !rolesByPrefix[matchedPrefix]!.includes(userRole ?? '')) {
+    return NextResponse.redirect(new URL('/unauthorized', request.url));
+  }
+
+  if (
+    userRole === 'control-escolar' &&
+    vinculacionOnlyRoutes.some((route) => pathname === route || pathname.startsWith(`${route}/`))
+  ) {
     return NextResponse.redirect(new URL('/unauthorized', request.url));
   }
 

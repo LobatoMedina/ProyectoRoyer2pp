@@ -67,7 +67,7 @@ export default function AspiranteDashboardPage() {
       </section>
 
       <section className="space-y-3">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-lg font-semibold text-gray-800">Recomendadas para tu perfil</h2>
           <Link href="/aspirante/vacantes" className="text-sm font-medium text-blue-600 hover:underline">
             Ver todas
@@ -81,10 +81,10 @@ export default function AspiranteDashboardPage() {
               <Link
                 key={vacante.VacanteId}
                 href={`/aspirante/vacantes/${vacante.VacanteId}`}
-                className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-5 transition hover:border-blue-400"
+                className="flex flex-col gap-2 rounded-lg border border-gray-200 bg-white p-4 transition hover:border-blue-400 sm:flex-row sm:items-center sm:justify-between sm:p-5"
               >
-                <div>
-                  <p className="font-semibold text-gray-900">{vacante.Vacante_Vacante}</p>
+                <div className="min-w-0">
+                  <p className="font-semibold break-words text-gray-900">{vacante.Vacante_Vacante}</p>
                   <p className="text-sm text-gray-500">
                     {vacante.empresa?.Empresa_Empresa} · {vacante.tipoVacante.VacanteTipo_VacanteTipo}
                   </p>

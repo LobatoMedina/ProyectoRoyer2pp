@@ -56,7 +56,7 @@ export default function EmpresaDashboardPage() {
       </div>
 
       <section className="space-y-3">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-lg font-semibold text-gray-800">Mis vacantes</h2>
           <Link href="/empresa/vacantes" className="text-sm font-medium text-blue-600 hover:underline">
             Administrar
@@ -70,10 +70,10 @@ export default function EmpresaDashboardPage() {
               <Link
                 key={vacante.VacanteId}
                 href={`/empresa/vacantes/${vacante.VacanteId}/postulantes`}
-                className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-5 transition hover:border-blue-400"
+                className="flex flex-col gap-2 rounded-lg border border-gray-200 bg-white p-4 transition hover:border-blue-400 sm:flex-row sm:items-center sm:justify-between sm:p-5"
               >
-                <div>
-                  <p className="font-semibold text-gray-900">{vacante.Vacante_Vacante}</p>
+                <div className="min-w-0">
+                  <p className="font-semibold break-words text-gray-900">{vacante.Vacante_Vacante}</p>
                   <p className="text-sm text-gray-500">
                     {vacante.totalPostulaciones} postulación(es) · {vacante.plazasDisponibles} plaza(s)
                     disponible(s)

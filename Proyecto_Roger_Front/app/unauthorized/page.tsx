@@ -3,7 +3,7 @@ import Link from 'next/link';
 export default function UnauthorizedPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-slate-900 p-6 text-center text-white">
-      <h1 className="text-3xl font-bold">Acceso no autorizado</h1>
+      <h1 className="text-2xl font-bold sm:text-3xl">Acceso no autorizado</h1>
       <p className="text-slate-300">
         Tu cuenta no tiene permisos para consultar esta sección del portal.
       </p>

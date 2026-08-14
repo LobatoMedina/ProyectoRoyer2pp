@@ -7,6 +7,7 @@ const roles = [
   { id: 1, nombre: 'Aspirante' },
   { id: 2, nombre: 'Empresa' },
   { id: 3, nombre: 'Vinculacion' },
+  { id: 4, nombre: 'Control Escolar' },
 ];
 
 const sexos = [
@@ -70,12 +71,31 @@ const tiposEmpresa = [
   { id: 3, nombre: 'Organización civil' },
 ];
 
-const ciclos = [
-  { id: 1, nombre: '2025-1' },
-  { id: 2, nombre: '2025-2' },
-  { id: 3, nombre: '2025-3' },
-  { id: 4, nombre: '2026-1' },
-];
+/**
+ * Los ciclos escolares se manejan como generaciones de cuatro años
+ * (2023-2027, 2024-2028, ...). Se genera el rango completo para que los
+ * egresados también puedan seleccionar la generación en la que ingresaron.
+ */
+const CICLO_PRIMER_ANIO = 2018;
+const CICLO_DURACION_ANIOS = 4;
+
+function buildCiclosEscolares(
+  primerAnio = CICLO_PRIMER_ANIO,
+  ultimoAnio = new Date().getFullYear() + 1
+) {
+  const generaciones: { id: number; nombre: string }[] = [];
+
+  for (let anio = primerAnio; anio <= ultimoAnio; anio += 1) {
+    generaciones.push({
+      id: generaciones.length + 1,
+      nombre: `${anio}-${anio + CICLO_DURACION_ANIOS}`,
+    });
+  }
+
+  return generaciones;
+}
+
+const ciclos = buildCiclosEscolares();
 
 const tiposVacante = [
   { id: 1, nombre: 'Prácticas profesionales' },
@@ -230,6 +250,8 @@ async function seedAdmin() {
 
 async function seedDemoData() {
   const demoPassword = process.env.SEED_DEMO_PASSWORD || 'Demo1234';
+  // Generación que corresponde a un estudiante que sigue inscrito.
+  const cicloVigenteId = ciclos[Math.max(ciclos.length - 3, 0)]!.id;
 
   if (process.env.SEED_DEMO_DATA === 'false') return;
 
@@ -245,6 +267,23 @@ async function seedDemoData() {
       Empresa_rfc: 'TCO120405AB1',
       Empresa_TipoEmpresaId: 1,
       UsuarioId: empresaUser.UsuarioId,
+    },
+  });
+
+  // Personal de Control Escolar: consulta expedientes y reportes.
+  const controlEscolarUser = await upsertUser('control_escolar', demoPassword, 4, true);
+
+  await prisma.persona.upsert({
+    where: { Persona_CURP: 'LORA900101MDFPMN05' },
+    update: {},
+    create: {
+      Persona_Nombre: 'Ana',
+      Persona_ApellidoPaterno: 'López',
+      Persona_ApellidoMaterno: 'Ramírez',
+      Persona_CURP: 'LORA900101MDFPMN05',
+      Persona_SexoId: 2,
+      Persona_edad: 34,
+      Persona_UsuarioId: controlEscolarUser.UsuarioId,
     },
   });
 
@@ -275,7 +314,7 @@ async function seedDemoData() {
         Aspirante_TipoAspiranteId: 1,
         Aspirante_CarreraId: 19,
         Aspirante_TurnoId: 1,
-        Aspirante_CicloEscolarInicioId: 1,
+        Aspirante_CicloEscolarInicioId: cicloVigenteId,
       },
     });
   }

@@ -316,8 +316,27 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "fechaHora": "2026-09-01T10:00:00Z",
+  "fechaHora": "2027-09-01T10:00:00Z",
   "lugar": "Sala A, Edificio Tech"
+}
+
+### Notificar entrevista con fecha pasada -> debe responder 400
+POST {{baseUrl}}/api/postulaciones/1/notificar-entrevista
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "fechaHora": "2020-01-15T10:00:00Z",
+  "lugar": "Sala A, Edificio Tech"
+}
+
+### Notificar entrevista con fecha no interpretable -> debe responder 400
+POST {{baseUrl}}/api/postulaciones/1/notificar-entrevista
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "fechaHora": "mañana por la tarde"
 }
 
 ### Contratar (Empresa)
@@ -359,6 +378,55 @@ Authorization: Bearer {{token}}
 ### Listar usuarios
 GET {{baseUrl}}/api/usuarios
 Authorization: Bearer {{token}}
+
+### Alta de personal de Control Escolar (rolId 4)
+POST {{baseUrl}}/api/usuarios/personal
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuario": "ce_lopez",
+  "contrasena": "Secreta123",
+  "nombre": "Ana",
+  "apellidoPaterno": "López",
+  "apellidoMaterno": "Ramírez",
+  "curp": "LORA900101MDFPMN05",
+  "sexoId": 2,
+  "edad": 34,
+  "rolId": 4
+}
+
+### Alta de personal de Vinculación (rolId 3)
+POST {{baseUrl}}/api/usuarios/personal
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuario": "vin_torres",
+  "contrasena": "Secreta123",
+  "nombre": "Carlos",
+  "apellidoPaterno": "Torres",
+  "curp": "TOCA880215HDFRRR03",
+  "sexoId": 1,
+  "edad": 38,
+  "rolId": 3
+}
+
+### Alta de personal con un rol no permitido (Aspirante) -> debe responder 400
+POST {{baseUrl}}/api/usuarios/personal
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuario": "rol_invalido",
+  "contrasena": "Secreta123",
+  "nombre": "Prueba",
+  "apellidoPaterno": "Prueba",
+  "curp": "PRPR900101HDFRRR09",
+  "sexoId": 1,
+  "edad": 30,
+  "rolId": 1
+}
 
 ### Activar o desactivar usuario
 PATCH {{baseUrl}}/api/usuarios/2/status

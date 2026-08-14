@@ -16,7 +16,7 @@ router.use(authenticateJWT);
 
 router.get(
   '/',
-  authorizeRoles(RoleName.VINCULACION, RoleName.EMPRESA),
+  authorizeRoles(RoleName.VINCULACION, RoleName.CONTROL_ESCOLAR, RoleName.EMPRESA),
   validateQuery(aspiranteFiltersSchema),
   AspiranteController.getAllAspirantes
 );
@@ -25,7 +25,7 @@ router.get('/me', authorizeRoles(RoleName.ASPIRANTE), AspiranteController.getMiP
 
 router.post(
   '/',
-  authorizeRoles(RoleName.ASPIRANTE, RoleName.VINCULACION),
+  authorizeRoles(RoleName.ASPIRANTE, RoleName.VINCULACION, RoleName.CONTROL_ESCOLAR),
   requireActiveAccount,
   validateBody(createExpedienteSchema),
   AspiranteController.createExpediente
@@ -33,13 +33,18 @@ router.post(
 
 router.get(
   '/:id',
-  authorizeRoles(RoleName.VINCULACION, RoleName.EMPRESA, RoleName.ASPIRANTE),
+  authorizeRoles(
+    RoleName.VINCULACION,
+    RoleName.CONTROL_ESCOLAR,
+    RoleName.EMPRESA,
+    RoleName.ASPIRANTE
+  ),
   AspiranteController.getAspiranteById
 );
 
 router.put(
   '/:id',
-  authorizeRoles(RoleName.ASPIRANTE, RoleName.VINCULACION),
+  authorizeRoles(RoleName.ASPIRANTE, RoleName.VINCULACION, RoleName.CONTROL_ESCOLAR),
   requireActiveAccount,
   validateBody(updateAspiranteSchema),
   AspiranteController.updateAspirante
@@ -47,7 +52,7 @@ router.put(
 
 router.post(
   '/:id/contactos',
-  authorizeRoles(RoleName.ASPIRANTE, RoleName.VINCULACION),
+  authorizeRoles(RoleName.ASPIRANTE, RoleName.VINCULACION, RoleName.CONTROL_ESCOLAR),
   requireActiveAccount,
   validateBody(addContactoSchema),
   AspiranteController.addContacto
@@ -55,7 +60,7 @@ router.post(
 
 router.delete(
   '/:id/contactos/:contactoId',
-  authorizeRoles(RoleName.ASPIRANTE, RoleName.VINCULACION),
+  authorizeRoles(RoleName.ASPIRANTE, RoleName.VINCULACION, RoleName.CONTROL_ESCOLAR),
   requireActiveAccount,
   AspiranteController.removeContacto
 );

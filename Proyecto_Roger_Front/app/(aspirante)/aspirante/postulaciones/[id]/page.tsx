@@ -58,7 +58,7 @@ export default function PostulacionDetallePage({ params }: { params: Promise<{ i
       {message ? <SuccessMessage message={message} /> : null}
       {error ? <ErrorMessage message={error} /> : null}
 
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
+      <div className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500">
           Avance del proceso
         </h2>
@@ -83,7 +83,7 @@ export default function PostulacionDetallePage({ params }: { params: Promise<{ i
       {postulacion.Postulacion_Activa ? (
         <button
           onClick={handleCancel}
-          className="rounded-lg border border-rose-300 px-5 py-2.5 text-sm font-medium text-rose-700 transition hover:bg-rose-50"
+          className="rounded-lg border border-rose-300 px-5 py-2.5 text-sm font-medium text-rose-700 transition hover:bg-rose-50 w-full sm:w-auto"
         >
           Cancelar postulación
         </button>

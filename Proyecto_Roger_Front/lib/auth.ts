@@ -9,10 +9,12 @@ const roleSlugByName: Record<RoleName, RoleSlug> = {
   Aspirante: 'aspirante',
   Empresa: 'empresa',
   Vinculacion: 'vinculacion',
+  'Control Escolar': 'control-escolar',
 };
 
 export function toRoleSlug(roles: RoleName[]): RoleSlug {
   if (roles.includes('Vinculacion')) return roleSlugByName.Vinculacion;
+  if (roles.includes('Control Escolar')) return roleSlugByName['Control Escolar'];
   if (roles.includes('Empresa')) return roleSlugByName.Empresa;
   return roleSlugByName.Aspirante;
 }
@@ -62,6 +64,11 @@ export function clearSession() {
   document.cookie = `${ROLE_COOKIE}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
 }
 
+/**
+ * Control Escolar comparte el panel de vinculación, pero con un menú
+ * reducido: solo consulta expedientes y reportes.
+ */
 export function homePathForRole(role: RoleSlug): string {
+  if (role === 'control-escolar') return '/vinculacion/aspirantes';
   return `/${role}`;
 }

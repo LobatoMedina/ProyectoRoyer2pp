@@ -50,7 +50,7 @@ export default function ConvenioEmpresaPage() {
       {message ? <SuccessMessage message={message} /> : null}
       {error ? <ErrorMessage message={error} /> : null}
 
-      <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-6">
+      <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 sm:p-6">
         <p className="text-sm text-gray-700">
           Al aceptar el convenio, tu empresa se compromete a publicar información veraz sobre sus
           vacantes, dar seguimiento a los aspirantes canalizados por la Coordinación de Vinculación y
@@ -60,14 +60,14 @@ export default function ConvenioEmpresaPage() {
         {estado === 'Vigente' ? (
           <button
             onClick={() => handleRespond(false)}
-            className="rounded-lg border border-rose-300 px-5 py-2.5 text-sm font-medium text-rose-700 transition hover:bg-rose-50"
+            className="rounded-lg border border-rose-300 px-5 py-2.5 text-sm font-medium text-rose-700 transition hover:bg-rose-50 w-full sm:w-auto"
           >
             Dar de baja el convenio
           </button>
         ) : (
           <button
             onClick={() => handleRespond(true)}
-            className="rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-700"
+            className="rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-700 w-full sm:w-auto"
           >
             Aceptar convenio
           </button>

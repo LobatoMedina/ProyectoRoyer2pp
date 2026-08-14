@@ -1,5 +1,4 @@
-import { Navbar } from '@/components/shared/navbar';
-import { Sidebar } from '@/components/shared/sidebar';
+import { AppShell } from '@/components/shared/app-shell';
 
 const navItems = [
   { label: 'Panel', href: '/empresa' },
@@ -10,12 +9,8 @@ const navItems = [
 
 export default function EmpresaLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar roleTitle="Empresa" />
-      <div className="flex">
-        <Sidebar items={navItems} />
-        <main className="flex-1 p-8">{children}</main>
-      </div>
-    </div>
+    <AppShell roleTitle="Empresa" navItems={navItems}>
+      {children}
+    </AppShell>
   );
 }

@@ -28,7 +28,7 @@ export default function ExpedienteAspirantePage({ params }: { params: Promise<{ 
 
       <PageHeader title={fullName(item.persona)} description={item.carrera.Carrera_Carrera} />
 
-      <div className="grid gap-4 rounded-lg border border-gray-200 bg-white p-6 sm:grid-cols-2">
+      <div className="grid gap-4 rounded-lg border border-gray-200 bg-white p-4 sm:grid-cols-2 sm:p-6">
         <Detail label="CURP" value={item.persona.Persona_CURP} />
         <Detail label="Edad" value={String(item.persona.Persona_edad)} />
         <Detail label="Sexo" value={item.persona.sexo?.Sexo_Sexo ?? '—'} />
@@ -40,7 +40,7 @@ export default function ExpedienteAspirantePage({ params }: { params: Promise<{ 
         />
       </div>
 
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
+      <div className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500">
           Medios de contacto
         </h2>
@@ -68,6 +68,6 @@ export default function ExpedienteAspirantePage({ params }: { params: Promise<{ 
 const Detail = ({ label, value }: { label: string; value: string }) => (
   <div>
     <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">{label}</p>
-    <p className="mt-1 text-sm text-gray-800">{value}</p>
+    <p className="mt-1 break-words text-sm text-gray-800">{value}</p>
   </div>
 );

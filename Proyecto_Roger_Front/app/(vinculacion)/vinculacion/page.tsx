@@ -51,7 +51,7 @@ export default function VinculacionDashboardPage() {
         />
       </div>
 
-      <section className="rounded-lg border border-gray-200 bg-white p-6">
+      <section className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500">
           Demanda por carrera
         </h2>
@@ -61,9 +61,9 @@ export default function VinculacionDashboardPage() {
           <ul className="mt-4 space-y-3">
             {demanda.map((item) => (
               <li key={item.id}>
-                <div className="flex justify-between text-sm text-gray-700">
-                  <span>{item.etiqueta}</span>
-                  <span className="font-semibold">{item.total}</span>
+                <div className="flex justify-between gap-3 text-sm text-gray-700">
+                  <span className="min-w-0 break-words">{item.etiqueta}</span>
+                  <span className="shrink-0 font-semibold">{item.total}</span>
                 </div>
                 <div className="mt-1 h-2 rounded-full bg-gray-100">
                   <div
@@ -77,11 +77,11 @@ export default function VinculacionDashboardPage() {
         )}
       </section>
 
-      <section className="rounded-lg border border-gray-200 bg-white p-6">
+      <section className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500">
           Etapas del proceso de selección
         </h2>
-        <div className="mt-4 grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           {embudo.map((item) => (
             <div key={item.id} className="rounded-lg bg-gray-50 p-4 text-center">
               <p className="text-2xl font-bold text-gray-900">{item.total}</p>

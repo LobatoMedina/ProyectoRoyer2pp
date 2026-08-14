@@ -6,6 +6,7 @@ import { useApi } from '@/lib/useApi';
 import { ErrorMessage, Loading, PageHeader, SuccessMessage } from '@/components/shared/feedback';
 import { DataTable } from '@/components/shared/data-table';
 import { StatusBadge } from '@/components/shared/status-badge';
+import { PersonalForm } from '@/components/forms/personal-form';
 
 export default function UsuariosPage() {
   const [message, setMessage] = useState<string | null>(null);
@@ -39,6 +40,18 @@ export default function UsuariosPage() {
 
       {message ? <SuccessMessage message={message} /> : null}
       {error ? <ErrorMessage message={error} /> : null}
+
+      <PersonalForm
+        onCreated={(texto) => {
+          setError(null);
+          setMessage(texto);
+          usuarios.reload();
+        }}
+        onError={(texto) => {
+          setMessage(null);
+          setError(texto);
+        }}
+      />
 
       <DataTable
         data={usuarios.data ?? []}
@@ -76,7 +89,7 @@ export default function UsuariosPage() {
           {
             header: 'Acciones',
             accessor: (item) => (
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 <select
                   value=""
                   onChange={(event) => {
