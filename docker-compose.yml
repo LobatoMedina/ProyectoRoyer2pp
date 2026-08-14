@@ -45,6 +45,7 @@ services:
         condition: service_healthy
     networks:
       - bolsa_trabajo
+      - dokploy-network
 
   web:
     build:
@@ -57,12 +58,14 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3001
+      HOSTNAME: 0.0.0.0
     ports:
-      - "${WEB_PORT}:3001"
+      - "127.0.0.1:${WEB_PORT}:3001"
     depends_on:
       - api
     networks:
       - bolsa_trabajo
+      - dokploy-network
 
 volumes:
   mariadb_data:
@@ -71,3 +74,5 @@ volumes:
 networks:
   bolsa_trabajo:
     driver: bridge
+  dokploy-network:
+    external: true
