@@ -1,0 +1,23 @@
+import { z } from 'zod';
+import * as schemas from '../Validation/Schemas';
+
+export type LoginDto = z.infer<typeof schemas.loginSchema>;
+export type RegisterAspiranteDto = z.infer<typeof schemas.registerAspiranteSchema>;
+export type RegisterEmpresaDto = z.infer<typeof schemas.registerEmpresaSchema>;
+export type CreateAspiranteExpedienteDto = z.infer<typeof schemas.createExpedienteSchema>;
+export type UpdateAspiranteDto = z.infer<typeof schemas.updateAspiranteSchema>;
+export type AddContactoDto = z.infer<typeof schemas.addContactoSchema>;
+export type AspiranteFiltersDto = z.infer<typeof schemas.aspiranteFiltersSchema>;
+export type UpdateEmpresaDto = z.infer<typeof schemas.updateEmpresaSchema>;
+export type SolicitarConvenioDto = z.infer<typeof schemas.solicitarConvenioSchema>;
+export type ResponderConvenioDto = z.infer<typeof schemas.responderConvenioSchema>;
+export type CreateVacanteDto = z.infer<typeof schemas.createVacanteSchema>;
+export type UpdateVacanteDto = z.infer<typeof schemas.updateVacanteSchema>;
+export type UpdateVacanteStatusDto = z.infer<typeof schemas.updateVacanteStatusSchema>;
+export type VacanteFiltersDto = z.infer<typeof schemas.vacanteFiltersSchema>;
+export type CreatePostulacionDto = z.infer<typeof schemas.createPostulacionSchema>;
+export type CanalizarPostulacionDto = z.infer<typeof schemas.canalizarPostulacionSchema>;
+export type UpdateResolucionDto = z.infer<typeof schemas.updateResolucionSchema>;
+export type NotificarEntrevistaDto = z.infer<typeof schemas.notificarEntrevistaSchema>;
+export type UpdateUsuarioStatusDto = z.infer<typeof schemas.updateUsuarioStatusSchema>;
+export type AssignRolDto = z.infer<typeof schemas.assignRolSchema>;

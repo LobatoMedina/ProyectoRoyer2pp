@@ -1,0 +1,73 @@
+services:
+  mariadb:
+    image: mariadb:11.4
+    container_name: bolsa_trabajo_db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+    ports:
+      - "127.0.0.1:${MARIADB_PORT}:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    networks:
+      - bolsa_trabajo
+
+  api:
+    build:
+      context: "./Bolsa de trabajo"
+      dockerfile: build.dockerfile
+    container_name: bolsa_trabajo_api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: "mysql://${MARIADB_USER}:${MARIADB_PASSWORD}@mariadb:3306/${MARIADB_DATABASE}"
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+      SEED_ADMIN_USER: ${SEED_ADMIN_USER}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD}
+      SEED_DEMO_PASSWORD: ${SEED_DEMO_PASSWORD}
+      SEED_DEMO_DATA: ${SEED_DEMO_DATA}
+    ports:
+      - "${API_PORT}:3000"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      - bolsa_trabajo
+
+  web:
+    build:
+      context: ./Proyecto_Roger_Front
+      dockerfile: build.dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+    container_name: bolsa_trabajo_web
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+    ports:
+      - "${WEB_PORT}:3001"
+    depends_on:
+      - api
+    networks:
+      - bolsa_trabajo
+
+volumes:
+  mariadb_data:
+    driver: local
+
+networks:
+  bolsa_trabajo:
+    driver: bridge

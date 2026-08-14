@@ -1,0 +1,383 @@
+@baseUrl = http://localhost:3000
+@adminUser = admin
+@adminPassword = Tijuana123?
+@empresaUser = tech_corp
+@aspiranteUser = juan_perez
+@demoPassword = CAMBIA_POR_TU_SEED_DEMO_PASSWORD
+@token = PEGA_AQUI_EL_TOKEN
+
+### Salud del servidor
+GET {{baseUrl}}/
+
+### Catálogos
+GET {{baseUrl}}/api/catalogos/carrera
+
+###
+GET {{baseUrl}}/api/catalogos/turno
+
+###
+GET {{baseUrl}}/api/catalogos/tipos-vacante
+
+###
+GET {{baseUrl}}/api/catalogos/tipos-duracion
+
+###
+GET {{baseUrl}}/api/catalogos/tipos-empresa
+
+###
+GET {{baseUrl}}/api/catalogos/tipos-aspirante
+
+###
+GET {{baseUrl}}/api/catalogos/tipos-contacto
+
+###
+GET {{baseUrl}}/api/catalogos/ciclos-escolares
+
+###
+GET {{baseUrl}}/api/catalogos/resoluciones
+
+###
+GET {{baseUrl}}/api/catalogos/sexos
+
+###
+GET {{baseUrl}}/api/catalogos/roles
+
+### Login como administrador (Vinculación)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "usuario": "{{adminUser}}",
+  "contrasena": "{{adminPassword}}"
+}
+
+### Login como Empresa
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "usuario": "{{empresaUser}}",
+  "contrasena": "{{demoPassword}}"
+}
+
+### Login como Aspirante
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "usuario": "{{aspiranteUser}}",
+  "contrasena": "{{demoPassword}}"
+}
+
+### Registro de aspirante
+POST {{baseUrl}}/api/auth/register-aspirante
+Content-Type: application/json
+
+{
+  "usuario": "ana_lopez",
+  "contrasena": "Aspirante123",
+  "nombre": "Ana",
+  "apellidoPaterno": "López",
+  "apellidoMaterno": "Ramírez",
+  "curp": "LORA010203MDFPMN04",
+  "sexoId": 2,
+  "edad": 21,
+  "tipoAspiranteId": 1,
+  "carreraId": 15,
+  "turnoId": 1,
+  "cicloEscolarInicioId": 1
+}
+
+### Registro de empresa (queda con convenio Pendiente)
+POST {{baseUrl}}/api/auth/register-empresa
+Content-Type: application/json
+
+{
+  "usuario": "innova_mx",
+  "contrasena": "Empresa123",
+  "empresaNombre": "Innova MX",
+  "razonSocial": "Innova MX S.A. de C.V.",
+  "rfc": "IMX190807QW2",
+  "direccion": "Calle Reforma 250, Ciudad de México",
+  "tipoEmpresaId": 1
+}
+
+### Usuario autenticado
+GET {{baseUrl}}/api/auth/me
+Authorization: Bearer {{token}}
+
+### Notificaciones del rol actual
+GET {{baseUrl}}/api/notificaciones
+Authorization: Bearer {{token}}
+
+### ----------------- ASPIRANTES -----------------
+
+### Listar aspirantes (Vinculación / Empresa)
+GET {{baseUrl}}/api/aspirantes?carreraId=19
+Authorization: Bearer {{token}}
+
+### Mi expediente (Aspirante)
+GET {{baseUrl}}/api/aspirantes/me
+Authorization: Bearer {{token}}
+
+### Expediente por id
+GET {{baseUrl}}/api/aspirantes/1
+Authorization: Bearer {{token}}
+
+### Actualizar expediente
+PUT {{baseUrl}}/api/aspirantes/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "edad": 23,
+  "carreraId": 19,
+  "turnoId": 1
+}
+
+### Agregar contacto
+POST {{baseUrl}}/api/aspirantes/1/contactos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "contacto": "555-0192",
+  "tipoContactoId": 1
+}
+
+### Eliminar contacto
+DELETE {{baseUrl}}/api/aspirantes/1/contactos/1
+Authorization: Bearer {{token}}
+
+### ----------------- EMPRESAS Y CONVENIOS -----------------
+
+### Listar empresas (Vinculación)
+GET {{baseUrl}}/api/empresas
+Authorization: Bearer {{token}}
+
+### Detalle de empresa
+GET {{baseUrl}}/api/empresas/1
+Authorization: Bearer {{token}}
+
+### Actualizar empresa
+PUT {{baseUrl}}/api/empresas/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "empresaNombre": "Tech Corp",
+  "direccion": "Av. Principal 100, Ciudad de México"
+}
+
+### Agregar contacto de empresa
+POST {{baseUrl}}/api/empresas/1/contactos
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "contacto": "contacto@techcorp.mx",
+  "tipoContactoId": 2
+}
+
+### Estado de convenios (Vinculación)
+GET {{baseUrl}}/api/empresas/convenios
+Authorization: Bearer {{token}}
+
+### Solicitar convenio (Vinculación)
+POST {{baseUrl}}/api/empresas/convenios/solicitar
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "empresaId": 1,
+  "observaciones": "Solicitud emitida por la Coordinación de Vinculación."
+}
+
+### Consultar mi convenio (Empresa)
+GET {{baseUrl}}/api/empresas/convenios/estado
+Authorization: Bearer {{token}}
+
+### Responder convenio (Empresa)
+PATCH {{baseUrl}}/api/empresas/convenios/1/responder
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "aceptado": true,
+  "observaciones": "Convenio aceptado por el representante."
+}
+
+### Vacantes de una empresa
+GET {{baseUrl}}/api/empresas/1/vacantes
+Authorization: Bearer {{token}}
+
+### ----------------- VACANTES -----------------
+
+### Listar vacantes con filtros
+GET {{baseUrl}}/api/vacantes?estado=Abierta&carreraId=19
+Authorization: Bearer {{token}}
+
+### Vacantes acordes al perfil del aspirante
+GET {{baseUrl}}/api/vacantes?soloMiPerfil=true
+Authorization: Bearer {{token}}
+
+### Detalle de vacante
+GET {{baseUrl}}/api/vacantes/1
+Authorization: Bearer {{token}}
+
+### Publicar vacante (Empresa: empresaId se toma del token)
+POST {{baseUrl}}/api/vacantes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "vacanteNombre": "Desarrollador Backend",
+  "vacantes": 2,
+  "turnoId": 1,
+  "salario": 14000,
+  "tipoVacanteId": 1,
+  "duracionTipoId": 3,
+  "carreraTargetId": 19,
+  "observaciones": "Node.js, TypeScript y MariaDB. Horario matutino."
+}
+
+### Actualizar vacante
+PUT {{baseUrl}}/api/vacantes/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "salario": 15000,
+  "vacantes": 3
+}
+
+### Abrir o cerrar vacante
+PATCH {{baseUrl}}/api/vacantes/1/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "activa": false
+}
+
+### Postulantes de una vacante
+GET {{baseUrl}}/api/vacantes/1/postulaciones
+Authorization: Bearer {{token}}
+
+### ----------------- POSTULACIONES -----------------
+
+### Postularse (Aspirante)
+POST {{baseUrl}}/api/postulaciones
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "vacanteId": 1
+}
+
+### Mis postulaciones (Aspirante)
+GET {{baseUrl}}/api/postulaciones/mis-postulaciones
+Authorization: Bearer {{token}}
+
+### Todas las postulaciones (Vinculación)
+GET {{baseUrl}}/api/postulaciones?resolucionId=1
+Authorization: Bearer {{token}}
+
+### Detalle de postulación
+GET {{baseUrl}}/api/postulaciones/1
+Authorization: Bearer {{token}}
+
+### Seguimiento de la postulación
+GET {{baseUrl}}/api/postulaciones/1/historial
+Authorization: Bearer {{token}}
+
+### Canalizar a la empresa (Vinculación)
+PATCH {{baseUrl}}/api/postulaciones/1/canalizar
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "observaciones": "El perfil cumple con los requisitos solicitados."
+}
+
+### Cambiar resolución (Empresa / Vinculación)
+PATCH {{baseUrl}}/api/postulaciones/1/resolucion
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "resolucionId": 4,
+  "comentarios": "Pasa a pruebas técnicas."
+}
+
+### Notificar entrevista (Empresa)
+POST {{baseUrl}}/api/postulaciones/1/notificar-entrevista
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "fechaHora": "2026-09-01T10:00:00Z",
+  "lugar": "Sala A, Edificio Tech"
+}
+
+### Contratar (Empresa)
+PATCH {{baseUrl}}/api/postulaciones/1/contratar
+Authorization: Bearer {{token}}
+
+### Cancelar postulación (Aspirante)
+DELETE {{baseUrl}}/api/postulaciones/1
+Authorization: Bearer {{token}}
+
+### ----------------- REPORTES (Vinculación) -----------------
+
+### Resumen general
+GET {{baseUrl}}/api/reportes/resumen
+Authorization: Bearer {{token}}
+
+### Vacantes por carrera
+GET {{baseUrl}}/api/reportes/vacantes-por-carrera
+Authorization: Bearer {{token}}
+
+### Demanda por carrera
+GET {{baseUrl}}/api/reportes/demanda-por-carrera
+Authorization: Bearer {{token}}
+
+### Embudo por resolución
+GET {{baseUrl}}/api/reportes/postulaciones-por-resolucion
+Authorization: Bearer {{token}}
+
+### Participación por empresa
+GET {{baseUrl}}/api/reportes/participacion-por-empresa
+Authorization: Bearer {{token}}
+
+### Vacantes más demandadas
+GET {{baseUrl}}/api/reportes/vacantes-mas-demandadas
+Authorization: Bearer {{token}}
+
+### ----------------- USUARIOS (Vinculación) -----------------
+
+### Listar usuarios
+GET {{baseUrl}}/api/usuarios
+Authorization: Bearer {{token}}
+
+### Activar o desactivar usuario
+PATCH {{baseUrl}}/api/usuarios/2/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "activo": true
+}
+
+### Asignar rol
+POST {{baseUrl}}/api/usuarios/2/roles
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "rolId": 3
+}
+
+### Retirar rol
+DELETE {{baseUrl}}/api/usuarios/2/roles/3
+Authorization: Bearer {{token}}

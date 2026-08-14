@@ -1,0 +1,289 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Usuario {
+  UsuarioId          Int     @id @default(autoincrement()) @map("UsuarioId")
+  Usuario_Usuario    String  @unique @map("Usuario_Usuario")
+  Usuario_Contraseña String  @map("Usuario_Contraseña")
+  Usuario_Activo     Boolean @default(true) @map("Usuario_Activo")
+
+  // Relaciones
+  personas     Persona[]
+  empresas     Empresa[]
+  rolesUsuario RolUsuario[]
+
+  @@map("tbl_ope_Usuario")
+}
+
+model Persona {
+  PersonaId               Int     @id @default(autoincrement()) @map("PersonaId")
+  Persona_Nombre          String  @map("Persona_Nombre")
+  Persona_ApellidoPaterno  String  @map("Persona_ApellidoPaterno")
+  Persona_ApellidoMaterno  String? @map("Persona_ApellidoMaterno")
+  Persona_UsuarioId       Int?    @map("Persona_UsuarioId")
+  Persona_CURP            String  @unique @map("Persona_CURP")
+  Persona_SexoId          Int     @map("Persona_SexoId")
+  Persona_edad            Int     @map("Persona_edad")
+
+  // Relaciones
+  usuario          Usuario?          @relation(fields: [Persona_UsuarioId], references: [UsuarioId])
+  sexo             Sexo              @relation(fields: [Persona_SexoId], references: [SexoId])
+  aspirantes       Aspirante[]
+  personaContactos PersonaContacto[]
+
+  @@map("tbl_ope_Persona")
+}
+
+model Contacto {
+  ContactoId            Int    @id @default(autoincrement()) @map("ContactoId")
+  Contacto_Contacto     String @map("Contacto_Contacto")
+  Contacto_TipoContacto Int    @map("Contacto_TipoContacto")
+
+  // Relaciones
+  tipoContacto     TipoContacto      @relation(fields: [Contacto_TipoContacto], references: [TipoContactoId])
+  personaContactos PersonaContacto[]
+  empresaContactos EmpresaContacto[]
+
+  @@map("tbl_ope_Contacto")
+}
+
+model Aspirante {
+  AspiranteId                    Int @id @default(autoincrement()) @map("AspiranteId")
+  Aspirante_PersonaId            Int @map("Aspirante_PersonaId")
+  Aspirante_TipoAspiranteId      Int @map("Aspirante_TipoAspiranteId")
+  Aspirante_CarreraId            Int @map("Aspirante_CarreraId")
+  Aspirante_TurnoId              Int @map("Aspirante_TurnoId")
+  Aspirante_CicloEscolarInicioId Int @map("Aspirante_CicloEscolarInicioId")
+
+  // Relaciones
+  persona            Persona       @relation(fields: [Aspirante_PersonaId], references: [PersonaId], onDelete: Cascade)
+  tipoAspirante      AspiranteTipo @relation(fields: [Aspirante_TipoAspiranteId], references: [AspiranteTipoId])
+  carrera            Carrera       @relation(fields: [Aspirante_CarreraId], references: [CarreraId])
+  turno              Turno         @relation(fields: [Aspirante_TurnoId], references: [TurnoId])
+  cicloEscolarInicio CicloEscolar  @relation(fields: [Aspirante_CicloEscolarInicioId], references: [CicloEscolarId])
+  postulaciones      Postulacion[]
+
+  @@map("tbl_ope_Aspirante")
+}
+
+model Empresa {
+  EmpresaId             Int    @id @default(autoincrement()) @map("Empresaid")
+  Empresa_TipoEmpresaId Int    @map("Empresa_TipoEmpresaid")
+  Empresa_Empresa       String @map("Empresa_Empresa")
+  Empresa_Direccion     String @map("Empresa_Direccion")
+  Empresa_RazonSocial   String @map("Empresa_RazonSocial")
+  UsuarioId             Int    @map("UsuarioId")
+  Empresa_rfc           String @unique @map("Empresa_rfc")
+
+  // Relaciones
+  tipoEmpresa      TipoEmpresa       @relation(fields: [Empresa_TipoEmpresaId], references: [TipoEmpresaId])
+  usuario          Usuario           @relation(fields: [UsuarioId], references: [UsuarioId])
+  empresaContactos EmpresaContacto[]
+  vacantesEmpresa  VacanteEmpresa[]
+
+  @@map("tbl_ope_Empresa")
+}
+
+model Vacante {
+  VacanteId               Int     @id @default(autoincrement()) @map("VacanteId")
+  Vacante_Vacante         String  @map("Vacante_Vacante")
+  Vacante_Vacantes        Int     @map("Vacante_Vacantes")
+  Vacante_TurnoId         Int     @map("Vacante_TurnoId")
+  Vacante_Salario         Decimal @map("Vacante_Salario") @db.Decimal(10, 2)
+  Vacante_TipoVacanteId   Int     @map("Vacante_TipoVacanteId")
+  Vacante_DuracionTipoId  Int     @map("Vacante_DuracionTipoId")
+  Vacante_Observaciones   String? @map("Vacante_Observaciones")
+  Vacante_Activa          Boolean @default(true) @map("Vacante_Activa")
+  Vacante_CarreraTargetId Int     @map("Vacante_CarreraTargetId")
+
+  // Relaciones
+  turno           Turno            @relation(fields: [Vacante_TurnoId], references: [TurnoId])
+  tipoVacante     VacanteTipo      @relation(fields: [Vacante_TipoVacanteId], references: [VacanteTipoId])
+  duracionTipo    DuracionTipo     @relation(fields: [Vacante_DuracionTipoId], references: [DuracionTipoId])
+  carreraTarget   Carrera          @relation(fields: [Vacante_CarreraTargetId], references: [CarreraId])
+  vacantesEmpresa VacanteEmpresa[]
+
+  @@map("tbl_ope_Vacante")
+}
+
+model Postulacion {
+  PostulacionId               Int      @id @default(autoincrement()) @map("PostulacionId")
+  Postulacion_VacanteEmpresaId Int      @map("Postulacion_VacanteEmpresaid")
+  Postulacion_AspiranteId     Int      @map("Postulacion_AspiranteId")
+  Postulacion_FechaPostulacion DateTime @map("Postulacion_FechaPostulacion") @db.Date
+  Postulacion_Activa          Boolean  @default(true) @map("Postulacion_Activa")
+  Postulacion_ResolucionId    Int      @map("Postulacion_ResoulcionId")
+
+  // Relaciones
+  vacanteEmpresa VacanteEmpresa @relation(fields: [Postulacion_VacanteEmpresaId], references: [VacanteEmpresaId], onDelete: Cascade)
+  aspirante      Aspirante      @relation(fields: [Postulacion_AspiranteId], references: [AspiranteId], onDelete: Cascade)
+  resolucion     Resolucion     @relation(fields: [Postulacion_ResolucionId], references: [ResolucionId])
+
+  @@index([Postulacion_AspiranteId])
+  @@index([Postulacion_VacanteEmpresaId])
+  @@map("tbl_ope_Postulacion")
+}
+
+model TipoContacto {
+  TipoContactoId            Int    @id @default(autoincrement()) @map("TipoContactoId")
+  TipoContacto_TipoContacto String @map("TipoContacto_TipoContacto")
+
+  contactos Contacto[]
+
+  @@map("tbl_cat_TipoContacto")
+}
+
+model Rol {
+  RolId   Int    @id @default(autoincrement()) @map("RolId")
+  Rol_Rol String @map("Rol_Rol")
+
+  rolesUsuario RolUsuario[]
+
+  @@map("tbl_cat_Rol")
+}
+
+model AspiranteTipo {
+  AspiranteTipoId             Int    @id @default(autoincrement()) @map("AspiranteTipoId")
+  AspiranteTipo_AspiranteTipo String @map("AspiranteTipo_AspiranteTipo")
+
+  aspirantes Aspirante[]
+
+  @@map("tbl_cat_AspiranteTipo")
+}
+
+model Carrera {
+  CarreraId                   Int     @id @default(autoincrement()) @map("CarreraId")
+  Carrera_Carrera             String  @unique @map("Carrera_Carrera")
+  Carrera_Activa              Boolean @default(true) @map("Carrera_Activa")
+  Carrera_CuatrimestreDuracion Int     @map("Carrera_CuatrimestreDuracion")
+
+  aspirantes Aspirante[]
+  vacantes   Vacante[]
+
+  @@map("tbl_cat_Carrera")
+}
+
+model TipoEmpresa {
+  TipoEmpresaId           Int    @id @default(autoincrement()) @map("TipoEmpresaid")
+  TipoEmpresa_TipoEmpresa String @unique @map("TipoEmpresa_TipoEmpresa")
+
+  empresas Empresa[]
+
+  @@map("tbl_cat_TipoEmpresa")
+}
+
+model Sexo {
+  SexoId    Int    @id @default(autoincrement()) @map("SexoId")
+  Sexo_Sexo String @unique @map("Sexo_Sexo")
+
+  personas Persona[]
+
+  @@map("tbl_cat_Sexo")
+}
+
+model Turno {
+  TurnoId     Int    @id @default(autoincrement()) @map("TurnoId")
+  Turno_turno String @map("Turno_turno")
+  Turno_letra String @map("Turno_letra") @db.Char(1)
+
+  aspirantes Aspirante[]
+  vacantes   Vacante[]
+
+  @@map("tbl_cat_Turno")
+}
+
+model CicloEscolar {
+  CicloEscolarId            Int     @id @default(autoincrement()) @map("CicloEscolarId")
+  CicloEscolar_CicloEscolar String  @map("CicloEscolar_CicloEscolar")
+  CicloEscolar_Activo       Boolean @default(true) @map("CicloEscolar_Activo")
+
+  aspirantes Aspirante[]
+
+  @@map("tbl_cat_CicloEscolar")
+}
+
+model VacanteTipo {
+  VacanteTipoId           Int    @id @default(autoincrement()) @map("VacanteTipoId")
+  VacanteTipo_VacanteTipo String @map("VacanteTipo_VacanteTipo")
+
+  vacantes Vacante[]
+
+  @@map("tbl_cat_VacanteTipo")
+}
+
+model DuracionTipo {
+  DuracionTipoId            Int    @id @default(autoincrement()) @map("DuracionTipoId")
+  DuracionTipo_DuracionTipo String @map("DuracionTipo_DuracionTipo")
+
+  vacantes Vacante[]
+
+  @@map("tbl_cat_DuracionTipo")
+}
+
+model Resolucion {
+  ResolucionId          Int    @id @default(autoincrement()) @map("ResolucionId")
+  Resolucion_Resolucion String @map("Resolucion_Resolucion")
+
+  postulaciones Postulacion[]
+
+  @@map("tbl_cat_Resolucion")
+}
+
+model RolUsuario {
+  RolUsuarioId         Int @id @default(autoincrement()) @map("RolUsuarioId")
+  RolUsuario_UsuarioId Int @map("RolUsuario_UsuarioId")
+  RolUsuario_RolId      Int @map("RolUsuario_RolId")
+
+  usuario Usuario @relation(fields: [RolUsuario_UsuarioId], references: [UsuarioId], onDelete: Cascade)
+  rol     Rol     @relation(fields: [RolUsuario_RolId], references: [RolId], onDelete: Cascade)
+
+  @@unique([RolUsuario_UsuarioId, RolUsuario_RolId])
+  @@map("tbl_rel_RolUsuario")
+}
+
+model PersonaContacto {
+  PersonaContactoId          Int @id @default(autoincrement()) @map("PersonaContactoId")
+  PersonaContacto_PersonaId  Int @map("PersonaContacto_PersonaId")
+  PersonaContacto_ContactoId Int @map("PersonaContacto_ContactoId")
+
+  persona  Persona  @relation(fields: [PersonaContacto_PersonaId], references: [PersonaId], onDelete: Cascade)
+  contacto Contacto @relation(fields: [PersonaContacto_ContactoId], references: [ContactoId], onDelete: Cascade)
+
+  @@unique([PersonaContacto_PersonaId, PersonaContacto_ContactoId])
+  @@map("tbl_rel_PersonaContacto")
+}
+
+model EmpresaContacto {
+  EmpresaContactoId          Int @id @default(autoincrement()) @map("EmpresaContactoId")
+  EmpresaContacto_EmpresaId  Int @map("EmpresaContacto_EmpresaId")
+  EmpresaContacto_ContactoId Int @map("EmpresaContacto_ContactoId")
+
+  empresa  Empresa  @relation(fields: [EmpresaContacto_EmpresaId], references: [EmpresaId], onDelete: Cascade)
+  contacto Contacto @relation(fields: [EmpresaContacto_ContactoId], references: [ContactoId], onDelete: Cascade)
+
+  @@unique([EmpresaContacto_EmpresaId, EmpresaContacto_ContactoId])
+  @@map("tbl_rel_EmpresaContacto")
+}
+
+model VacanteEmpresa {
+  VacanteEmpresaId         Int @id @default(autoincrement()) @map("VacanteEmpresaid")
+  VacanteEmpresa_EmpresaId Int @map("VacanteEmpresa_EmpresaId")
+  VacanteEmpresa_VacanteId Int @map("VacanteEmpresa_VacanteId")
+
+  empresa       Empresa       @relation(fields: [VacanteEmpresa_EmpresaId], references: [EmpresaId], onDelete: Cascade)
+  vacante       Vacante       @relation(fields: [VacanteEmpresa_VacanteId], references: [VacanteId], onDelete: Cascade)
+  postulaciones Postulacion[]
+
+  @@unique([VacanteEmpresa_EmpresaId, VacanteEmpresa_VacanteId])
+  @@map("tbl_rel_VacanteEmpresa")
+}

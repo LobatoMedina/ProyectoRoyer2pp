@@ -1,0 +1,23 @@
+# Secretos: nunca subir al repositorio
+.env
+.env.local
+.env.*.local
+
+# Dependencias y artefactos de compilacion
+node_modules/
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/settings.json
